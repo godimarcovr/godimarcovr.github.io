@@ -88,7 +88,7 @@ Volumetric rendering is the name used to describe techniques used to display a 2
 \subsection{The Oculus Rift}
 \includegraphics[scale=0.5]{oculus.jpg}
 
-The Oculus Rift  is a virtual reality headset by Oculus VR that offer the user a fully immersive experience so they can see and interact with the application as if he was seeing with his own eyes instead of looking at a monitor. As of today the most advanced medel is the DK2, for this project we're using the DK1 but it should be compatible with the DK2 since they share the same libraries.
+The Oculus Rift  is a virtual reality headset by Oculus VR that offer the user a fully immersive experience so they can see and interact with the application as if he was seeing with his own eyes instead of looking at a monitor. As of today the most advanced model is the DK2, for this project we're using the DK1. Our application is not compatible with DK2 because the approach we used is not supported on the newer model and the updated approach needs a more in-depth knowledge of the OpenGL pipeline. Luckily anyone with the required knowledge can make our application compatible by modifying the code where the distortion is applied (More details on later sections).
 
 
 
@@ -106,7 +106,7 @@ The Oculus Rift  is a virtual reality headset by Oculus VR that offer the user a
 %%%
 \subsection{Hardware}
 \begin{itemize}
-\item It needs a fairly powerful computer to run smoothly because the Volumetric rendering is a resources hungry technique and, since the oculus needs to have a different texture for both of the eyes, the rendering cost doubled.
+\item It needs a fairly powerful computer (expecially a powerful video card) to run smoothly because the Volumetric rendering is a resources hungry technique and, since the oculus needs to have a different texture for both of the eyes, the rendering cost doubled.
 
 \item The graphic card needs to be able to use OpenGL 3.1 .
 
@@ -137,7 +137,7 @@ The Oculus Rift  is a virtual reality headset by Oculus VR that offer the user a
 
 \newpage
 \section{External Libraries}
-Since this project needed to be completeted in a fairly reasonable amount of time we decided to use some external libraries for an easier menagement, for the volumetric rendering we're using the VTK libraries, and, for the Oculus Rift menagement we're using the Oculus SDK libraries
+Since this project needed to be completeted in a fairly reasonable amount of time we decided to use some external libraries for an easier management, for the volumetric rendering we're using the VTK libraries, and, for the Oculus Rift management we're using the Oculus SDK libraries
 
 %%%
 \subsection{VTK}
@@ -149,7 +149,7 @@ The Visualization Toolkit (VTK) is an open-source, freely available software sys
 \subsection{Oculus SDK}
 \includegraphics[width=0.4\linewidth,clip,trim=7cm -3mm 5cm -2mm]{Oculus_sdk.png}
 
-The Oculus SDK is the libraries offered by Oculus VR to menage Oculus Rift headset implementation. It offer methods to keep tracking of the headpose, obtain hardware specifics form the Oculus headset and it allow for creation of virtual heaset useful for debugging the application.
+The Oculus SDK is the libraries offered by Oculus VR to manage Oculus Rift headset implementation. It offer methods to keep tracking of the headpose, obtain hardware specifics form the Oculus headset and it allow for creation of virtual heaset useful for debugging the application.
 
 
 
@@ -170,7 +170,7 @@ The Oculus SDK is the libraries offered by Oculus VR to menage Oculus Rift heads
 
 %%%
 \subsection{Approach}
-The application use the VTK libraries to load the Dicom files, create two viewport with the appropriate distance determined by the eye spacing and then applies a barrel distortion shader so that the image is fixed to display properly on the Oculus Rift.
+The application uses the VTK libraries to load the Dicom files (or MHA or VTI files) which are to be visualized as a 3D dataset by a volumetric algorithm, then creates a split screen which shows two different points of view of the visualized dataset (representing the two eyes of the user) with the appropriate distance determined by the eye spacing and then applies a barrel distortion shader so that the image is fixed to display properly on the Oculus Rift.
 
 %%%
 \subsection{Classes}
@@ -229,7 +229,7 @@ The main features that leaded us to try using Omegalib are:
 \item It implements two rendering libraries, OpenSceneGraph and VTK.
 \item It natively redirects  the output on various devices, among them is the OculusRift.
 \item Support for a wide range of input peripherals (controllers, motion  capture systems, touch surfaces, speech and brain interfaces), through  the  Omicron toolkit.
-\item It offers a python wrapper so that the program could be written using a more simple language.
+\item It offers a python wrapper so that the program could be written using a simpler language.
 \end{itemize}
 
 \noindent
@@ -239,6 +239,33 @@ We attempted  reviewing the whole library code that manage the output control, s
 Turns out that, while Omegalib implements the VTK, it doesn't support the volumetric rendering, at least it doesn't as of now, it may be implemented in the future.
 
 Because of this any and all plans of using Omegalib for this project fell through so we were back at the beginning and had to go with pure VTK again.
+
+So what we needed was to find a way to implement all of these features:
+\begin{itemize}
+\item Volumetric Visualization of 3D datasets
+\item "Two points of view" management (for the two eyes of the Oculus user)
+\item Applying barrel distortion
+\item Inserting head pose tracking into a VTK application
+\item Outputting video on the Oculus Rift
+\end{itemize}
+
+%link qui o li mettiamo in fondo nelle citazioni? MI DA ERRORE QUA NON SO COSA
+%We looked for other similar projects and two caught our attention: multipass_vtk by zadacka ( https://github.com/zadacka/multipass_vtk ) and and application by  Przemysław Brudny and Mateusz Wójcik by the Universidade de Aveiro ( which you can find here http://sweet.ua.pt/paulo.dias/rva/TrabalhosRVA_2.htm ).
+The first one sadly only supports Linux and uses an older version of  the Oculus SDK, but uses an interesting approach (the multipass system offered by VTK) which we'll look more into later.
+The second one also uses an older version of the Oculus SDK. Also it uses a software distortion of the image, making it too slow for an interactive experience.
+While we were studying these projects, we started developing other components of our software.
+Starting from a VTK example, we created a Volumetric viewer which takes a series of .dcm files (or a .vti or a .mha) and visualizes it on screen, making it possibile to manipulate it by moving the camera and using widgets to make cross sections of it in real time.
+%screen del Volumetric Viewer
+While we were looking into a way to apply a barrel distortion and output our software onto the Oculus Rift, we also created a program which visualized onto two viewports on a split screen a normal VTK application, each viewport having a translated camera based on the eye distance value. We made this software and it worked, but then we discarded it because we found another solution, easier to manage and less verbose.
+We also looked into pre-existing OpenGL Oculus Rift applications to get an idea about how to make a VR software. We found very soon that the latest way to do it involved pure OpenGL which is very problematic to use in a VTK application without knowing it very well because you could mess withthe VTK pipeline. So we opted for a deprecated way, which includes distortion using a shader in post-processing and using Mirrored Desktop so you can use the Oculus as an external monitor.
+So we learned of two ways to apply post processing into a VTK application:
+\begin{itemize}
+\item The external way: WindowToImageFilter, which "takes a screenshot" of a viewport and lets you use it as an Actor2D... Two problems: it's very slow (it loads the screenshot from video memory to RAM and the to video memory again) and also doesn't support shaders.
+%DIO CANE DA ERRORE LA SCRITTA MULTIPASS
+%\item The internal way: Multipass (inspired by zadacka's multipass_vtk) which lets you build the rendering pipeline of an application, sometimes down to the OpenGL code. Using a Gaussian Blur Post Processing example as a starting point we built a class which solves two of our needed features: "Two points of view" (by making the render pass render the scene two times from different positions) and barrel distortion (by applying a shader to the texture in which we store the rendered scene).
+\end{itemize}
+So we had a volumetric viewer, we could have video from our two eyes, we could distort it and output all of this into our Oculus Rift by mirroring the screen.
+We only needed to handle the user's Head Pose, which we did by polling it trough the Oculus SDK every few milliseconds.
 
 
 
