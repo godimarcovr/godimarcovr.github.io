@@ -262,7 +262,7 @@ So we learned of two ways to apply post processing into a VTK application:
 \begin{itemize}
 \item The external way: WindowToImageFilter, which "takes a screenshot" of a viewport and lets you use it as an Actor2D... Two problems: it's very slow (it loads the screenshot from video memory to RAM and the to video memory again) and also doesn't support shaders.
 %DIO CANE DA ERRORE LA SCRITTA MULTIPASS
-%\item The internal way: Multipass (inspired by zadacka's multipass_vtk) which lets you build the rendering pipeline of an application, sometimes down to the OpenGL code. Using a Gaussian Blur Post Processing example as a starting point we built a class which solves two of our needed features: "Two points of view" (by making the render pass render the scene two times from different positions) and barrel distortion (by applying a shader to the texture in which we store the rendered scene).
+\item The internal way: Multipass ( inspired by zadacka's multipass\_vtk ) which lets you build the rendering pipeline of an application, sometimes down to the OpenGL code. Using a Gaussian Blur Post Processing example as a starting point we built a class which solves two of our needed features: "Two points of view" (by making the render pass render the scene two times from different positions) and barrel distortion (by applying a shader to the texture in which we store the rendered scene).
 \end{itemize}
 So we had a volumetric viewer, we could have video from our two eyes, we could distort it and output all of this into our Oculus Rift by mirroring the screen.
 We only needed to handle the user's Head Pose, which we did by polling it trough the Oculus SDK every few milliseconds.
