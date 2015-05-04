@@ -78,7 +78,7 @@
 %%%%%        Introduction        %%%%%%%%%%%%%%
 \newpage
 \section {Introduction}
-The scope of this project is to make a Volumetric viewer compatible with the Oculus Rift headmount display.
+The purpose of this project is to make a Volumetric viewer compatible with the Oculus Rift headmount display.
 
 %%%
 \subsection{Volumetric rendering}
@@ -177,13 +177,30 @@ The application uses the VTK libraries to load the Dicom files (or MHA or VTI fi
 \begin{description}
 
 \item[Main] \hfill \\
-  This class import the DICOM files and create the volumetric viewport.
-   \item[Rift\_Pass] \hfill \\
-  This class apply the barrel distortion shader.
-  \item[Split\_window] \hfill \\
-  This class create two viewports from a single one and keep them synchronized.
-  \item[Oculus\_middleware] \hfill \\
-  This class is used as a class used to initializate the Oculus and return hardware related information such as the head pose and textures size.
+This class has the main function which is obviously the entry point for the program. The command line options are passed at the SmartVolume class, then a custom rendering pipeline is set up wo allow postprocessing (in the vtkStereoDistortPass) for the split vision and the barrel distortion, then we use a utility class defined here to enable Oculus headpose tracking before finally starting the application. 
+
+\item [SmartVolume]
+This class can receive command line options (you can pass them through the Init method) which are described in the PrintUsage function. The purpose of this class is to create the graphical environment(window with model and interactions), to load the requested input data (which MUST be passed through string arguments, if DEBUG is enabled it opens the "abdomen" DICOM dataset in the project folder), tovisualize it with the requested blending mode (which are the different ways to map the dataset density values to the desired RGBA data) and to offer interaction with it through mouse and keyboard.
+
+With the mouse you can rotate the model and interact with an optional bounding box around the model which allows you to cross section the dataset on your desired plane.
+With the keyboard you can change the blending mode, reset the model position, change the opacity levels.
+
+The key bindings are in the KeypressCallbackFunction function, while the mouse interaction is defined in the VTK default  vtkInteractor.
+
+Some local variables of significance:
+\begin{itemize}
+\item opacityWindow e opacityLevel together represent the range of values of density in the dataset in which the alpha value is set (from 0 to 1 from start to end in the range).
+\item reductionFactor goes from 0.0 to 1.0 and represents the percentage of samples taken from the dataset (reducing this value increases performance at the cost of quality.
+\item initCam and boxtrans are used in the reset function bound the the R key.
+\end{itemize}
+\item[vtkStereoDistortPass] \hfill \\
+This class intervenes at every rendering cycle. At a conceptual level, it renders the scene two times from two slightly translated positions, and then puts them together after barrel distorting them.
+This is realized by using a fragment shader with two textures as input. It needs a value for the InterPupillaryDistance to be set. A lot of code is just setup for the Textures, the FBOs and the ShaderProgram.
+
+The fragment shader (distortion.fs) determines whether the pixel is in the left or the right part of the screen and calculates distortion coordinates accordingly (using parameters set in the vtkStereoDistortPass Class. Then it takes the corresponding pixel color from the determined texture in which the two rendered scenes are stored.
+Almost all the "technical" code is based on the VTK vtkGaussianBlurPass source code.
+\item[Oculus\_middleware] \hfill \\
+This class is used as a class used to initializate the Oculus and return hardware related information such as the head pose and textures size.
 
 \end{description}
 
@@ -250,18 +267,20 @@ So what we needed was to find a way to implement all of these features:
 \end{itemize}
 
 %link qui o li mettiamo in fondo nelle citazioni? MI DA ERRORE QUA NON SO COSA
-%We looked for other similar projects and two caught our attention: multipass_vtk by zadacka ( https://github.com/zadacka/multipass_vtk ) and and application by  Przemysław Brudny and Mateusz Wójcik by the Universidade de Aveiro ( which you can find here http://sweet.ua.pt/paulo.dias/rva/TrabalhosRVA_2.htm ).
+We looked for other similar projects and two caught our attention: multipass\_vtk by zadacka ( https://github.com/zadacka/multipass\_vtk ) and and application by  Przemysław Brudny and Mateusz Wójcik by the Universidade de Aveiro ( which you can find here http://sweet.ua.pt/paulo.dias/rva/TrabalhosRVA\_2.htm ).
 The first one sadly only supports Linux and uses an older version of  the Oculus SDK, but uses an interesting approach (the multipass system offered by VTK) which we'll look more into later.
 The second one also uses an older version of the Oculus SDK. Also it uses a software distortion of the image, making it too slow for an interactive experience.
+
 While we were studying these projects, we started developing other components of our software.
 Starting from a VTK example, we created a Volumetric viewer which takes a series of .dcm files (or a .vti or a .mha) and visualizes it on screen, making it possibile to manipulate it by moving the camera and using widgets to make cross sections of it in real time.
 %screen del Volumetric Viewer
+
 While we were looking into a way to apply a barrel distortion and output our software onto the Oculus Rift, we also created a program which visualized onto two viewports on a split screen a normal VTK application, each viewport having a translated camera based on the eye distance value. We made this software and it worked, but then we discarded it because we found another solution, easier to manage and less verbose.
 We also looked into pre-existing OpenGL Oculus Rift applications to get an idea about how to make a VR software. We found very soon that the latest way to do it involved pure OpenGL which is very problematic to use in a VTK application without knowing it very well because you could mess withthe VTK pipeline. So we opted for a deprecated way, which includes distortion using a shader in post-processing and using Mirrored Desktop so you can use the Oculus as an external monitor.
+
 So we learned of two ways to apply post processing into a VTK application:
 \begin{itemize}
 \item The external way: WindowToImageFilter, which "takes a screenshot" of a viewport and lets you use it as an Actor2D... Two problems: it's very slow (it loads the screenshot from video memory to RAM and the to video memory again) and also doesn't support shaders.
-%DIO CANE DA ERRORE LA SCRITTA MULTIPASS
 \item The internal way: Multipass ( inspired by zadacka's multipass\_vtk ) which lets you build the rendering pipeline of an application, sometimes down to the OpenGL code. Using a Gaussian Blur Post Processing example as a starting point we built a class which solves two of our needed features: "Two points of view" (by making the render pass render the scene two times from different positions) and barrel distortion (by applying a shader to the texture in which we store the rendered scene).
 \end{itemize}
 So we had a volumetric viewer, we could have video from our two eyes, we could distort it and output all of this into our Oculus Rift by mirroring the screen.
