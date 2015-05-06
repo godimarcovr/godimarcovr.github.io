@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012/W32TeX) (format=pdflatex 2013.4.4)  4 MAY 2015 17:06
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012/W32TeX) (format=pdflatex 2013.4.4)  6 MAY 2015 16:58
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -602,31 +602,92 @@ File: Oculus_sdk.png Graphic file (type png)
  <use Oculus_sdk.png>
 Package pdftex.def Info: Oculus_sdk.png used on input line 150.
 (pdftex.def)             Requested size: 167.2989pt x 75.06148pt.
- [4 <./Oculus_sdk.png> <./VTK.png>] [5] [6]
-Underfull \hbox (badness 10000) in paragraph at lines 236--241
+ [4 <./Oculus_sdk.png> <./VTK.png>] <img/main_using.PNG, id=27, 1028.34187pt x 
+578.16pt>
+File: img/main_using.PNG Graphic file (type png)
+
+<use img/main_using.PNG>
+Package pdftex.def Info: img/main_using.PNG used on input line 182.
+(pdftex.def)             Requested size: 390.87862pt x 219.76483pt.
+
+<img/smartvolumetricdemo_startscreen.PNG, id=28, 463.7325pt x 481.04718pt>
+File: img/smartvolumetricdemo_startscreen.PNG Graphic file (type png)
+
+<use img/smartvolumetricdemo_startscreen.PNG>
+Package pdftex.def Info: img/smartvolumetricdemo_startscreen.PNG used on input 
+line 188.
+(pdftex.def)             Requested size: 195.4393pt x 202.73575pt.
+ [5 <./img/main_using.PNG>]
+<img/smartvolumetricdemo_blending.PNG, id=34, 463.7325pt x 481.04718pt>
+File: img/smartvolumetricdemo_blending.PNG Graphic file (type png)
+
+<use img/smartvolumetricdemo_blending.PNG>
+Package pdftex.def Info: img/smartvolumetricdemo_blending.PNG used on input lin
+e 193.
+(pdftex.def)             Requested size: 195.4393pt x 202.73575pt.
+
+<img/smartvolumetricdemo_crosssection.PNG, id=35, 463.7325pt x 481.04718pt>
+File: img/smartvolumetricdemo_crosssection.PNG Graphic file (type png)
+
+<use img/smartvolumetricdemo_crosssection.PNG>
+Package pdftex.def Info: img/smartvolumetricdemo_crosssection.PNG used on input
+ line 194.
+(pdftex.def)             Requested size: 195.4393pt x 202.73575pt.
+
+Overfull \hbox (2.43332pt too wide) in paragraph at lines 193--195
+[][] [] 
+ []
+
+[6 <./img/smartvolumetricdemo_startscreen.PNG> <./img/smartvolumetricdemo_blend
+ing.PNG> <./img/smartvolumetricdemo_crosssection.PNG>]
+<img/stereodistortpass_stereoonly.PNG, id=42, 614.295pt x 405.76593pt>
+File: img/stereodistortpass_stereoonly.PNG Graphic file (type png)
+
+<use img/stereodistortpass_stereoonly.PNG>
+Package pdftex.def Info: img/stereodistortpass_stereoonly.PNG used on input lin
+e 207.
+(pdftex.def)             Requested size: 390.87862pt x 258.19096pt.
+
+<img/stereodistortpass_eyedistance.PNG, id=43, 614.295pt x 405.76593pt>
+File: img/stereodistortpass_eyedistance.PNG Graphic file (type png)
+
+<use img/stereodistortpass_eyedistance.PNG>
+Package pdftex.def Info: img/stereodistortpass_eyedistance.PNG used on input li
+ne 211.
+(pdftex.def)             Requested size: 390.87862pt x 258.19096pt.
+ [7 <./img/stereodistortpass_stereoonly.PNG>] <img/rift_middleware.PNG, id=49, 
+509.65407pt x 258.21469pt>
+File: img/rift_middleware.PNG Graphic file (type png)
+
+<use img/rift_middleware.PNG>
+Package pdftex.def Info: img/rift_middleware.PNG used on input line 221.
+(pdftex.def)             Requested size: 390.87862pt x 198.04579pt.
+ [8 <./img/stereodistortpass_eyedistance.PNG>]
+[9 <./img/rift_middleware.PNG>]
+Underfull \hbox (badness 10000) in paragraph at lines 259--264
 
  []
 
-[7] [8] [9] (./tesi.aux) ) 
+[10] [11] [12] (./tesi.aux) ) 
 Here is how much of TeX's memory you used:
- 4200 strings out of 493481
- 62606 string characters out of 3144420
- 132578 words of memory out of 3000000
- 7440 multiletter control sequences out of 15000+200000
+ 4237 strings out of 493481
+ 63864 string characters out of 3144420
+ 131578 words of memory out of 3000000
+ 7468 multiletter control sequences out of 15000+200000
  10013 words of font info for 35 fonts, out of 3000000 for 9000
  957 hyphenation exceptions out of 8191
- 44i,11n,43p,681b,257s stack positions out of 5000i,500n,10000p,200000b,50000s
-<c:/texlive/2012/texmf-dist/fonts/type1/public/amsfon
-ts/cm/cmbx10.pfb><c:/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmr
-10.pfb><c:/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb><c:
-/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb><c:/texlive/2
-012/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb><c:/texlive/2012/texmf-d
-ist/fonts/type1/public/amsfonts/cm/cmss12.pfb><c:/texlive/2012/texmf-dist/fonts
-/type1/public/amsfonts/cm/cmsy10.pfb>
-Output written on tesi.pdf (9 pages, 343078 bytes).
+ 44i,11n,43p,681b,324s stack positions out of 5000i,500n,10000p,200000b,50000s
+<c:/texlive/2012/texmf-dist/fonts/type1/public/ams
+fonts/cm/cmbx10.pfb><c:/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/
+cmr10.pfb><c:/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb>
+<c:/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb><c:/texliv
+e/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb><c:/texlive/2012/texm
+f-dist/fonts/type1/public/amsfonts/cm/cmss12.pfb><c:/texlive/2012/texmf-dist/fo
+nts/type1/public/amsfonts/cm/cmsy10.pfb>
+Output written on tesi.pdf (12 pages, 1756422 bytes).
 PDF statistics:
- 69 PDF objects out of 1000 (max. 8388607)
- 45 compressed objects within 1 object stream
+ 92 PDF objects out of 1000 (max. 8388607)
+ 51 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 22 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 57 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -10,6 +10,6 @@
 \contentsline {section}{\numberline {4}Project}{5}
 \contentsline {subsection}{\numberline {4.1}Approach}{5}
 \contentsline {subsection}{\numberline {4.2}Classes}{5}
-\contentsline {section}{\numberline {5}Development journal}{7}
-\contentsline {subsection}{\numberline {5.1}Volumetric rendering libraries}{7}
-\contentsline {subsection}{\numberline {5.2}Omegalib}{8}
+\contentsline {section}{\numberline {5}Development journal}{10}
+\contentsline {subsection}{\numberline {5.1}Volumetric rendering libraries}{10}
+\contentsline {subsection}{\numberline {5.2}Omegalib}{11}
