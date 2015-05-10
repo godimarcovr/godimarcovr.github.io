@@ -29,7 +29,8 @@
 \usepackage{paralist} % very flexible & customisable lists (eg. enumerate/itemize, etc.)
 \usepackage{verbatim} % adds environment for commenting out blocks of text & for better verbatim
 \usepackage{subfig} % make it possible to include more than one captioned figure/table in a single float
-
+\usepackage[section]{placeins} %add the command \floatbarrier at the end of each section
+ \usepackage{floatrow}
 % These packages are all incorporated in the memoir class to one degree or another...
 
 %%% HEADERS & FOOTERS
@@ -174,24 +175,42 @@ The application uses the VTK libraries to load the Dicom files (or MHA or VTI fi
 
 %%%
 \subsection{Classes}
-\begin{description}
 
-\item[Main] \hfill \\
+%
+\subsubsection{Main}
 This class has the main function which is obviously the entry point for the program. The command line options are passed at the SmartVolume class, then a custom rendering pipeline is set up wo allow postprocessing (in the vtkStereoDistortPass) for the split vision and the barrel distortion, then we use a utility class defined here to enable Oculus headpose tracking before finally starting the application.
 %DIDASCALIE IMMAGINI? SPAZIARE MEGLIO?
+
+\begin{figure}[h!]
+  \centering
 \includegraphics[width=1.0\linewidth]{img/main_using.PNG}
+  \caption{The end result of the output as seen on a normal screen.}
+  \label{endResult}
+\end{figure}
 
-\item [SmartVolume]
-
+%
+\FloatBarrier
+\pagebreak
+\subsubsection{SmartVolume}
 This class can receive command line options (you can pass them through the Init method) which are described in the PrintUsage function. The purpose of this class is to create the graphical environment(window with model and interactions), to load the requested input data (which MUST be passed through string arguments, if DEBUG is enabled it opens the "abdomen" DICOM dataset in the project folder), tovisualize it with the requested blending mode (which are the different ways to map the dataset density values to the desired RGBA data) and to offer interaction with it through mouse and keyboard.
 
-\centerline{\includegraphics[width=0.5\linewidth]{img/smartvolumetricdemo_startscreen.PNG}}
+\begin{figure}[h!]
+  \centering
+\includegraphics[width=0.4\linewidth]{img/smartvolumetricdemo_startscreen.PNG}
+  \caption{Output of the SmartVolume class.}
+\end{figure}
 
 With the mouse you can rotate the model and interact with an optional bounding box around the model which allows you to cross section the dataset on your desired plane.
 With the keyboard you can change the blending mode, reset the model position, change the opacity levels.
 
-\includegraphics[width=0.5\linewidth]{img/smartvolumetricdemo_blending.PNG}
-\includegraphics[width=0.5\linewidth]{img/smartvolumetricdemo_crosssection.PNG}
+\begin{figure}[h!]
+
+\includegraphics[width=0.4\linewidth]{img/smartvolumetricdemo_blending.PNG}
+  \includegraphics[width=0.4\linewidth]{img/smartvolumetricdemo_crosssection.PNG}
+  \caption{The model can be rotated and also sliced.}
+
+
+\end{figure}
 
 The key bindings are in the KeypressCallbackFunction function, while the mouse interaction is defined in the VTK default  vtkInteractor.
 
@@ -201,26 +220,41 @@ Some local variables of significance:
 \item reductionFactor goes from 0.0 to 1.0 and represents the percentage of samples taken from the dataset (reducing this value increases performance at the cost of quality.
 \item initCam and boxtrans are used in the reset function bound the the R key.
 \end{itemize}
-\item[vtkStereoDistortPass] \hfill \\
+
+%
+\FloatBarrier
+\pagebreak
+\subsubsection{VtkStereoDistortPass}
 This class intervenes at every rendering cycle. At a conceptual level, it renders the scene two times from two slightly translated positions, and then puts them together after barrel distorting them.
 This is the scene rendered two times
-\includegraphics[width=1.0\linewidth]{img/stereodistortpass_stereoonly.PNG}
+\begin{figure}[h!]
 
-You can see here the translated eye position
+%\includegraphics[width=0.8\linewidth]{img/stereodistortpass_stereoonly.PNG}
+\includegraphics[width=0.8\linewidth]{img/stereodistortpass_eyedistance.PNG}
+  \caption{You can see here the translated eye position.}
 
-\includegraphics[width=1.0\linewidth]{img/stereodistortpass_eyedistance.PNG}
+\end{figure}
+
 
 This is realized by using a fragment shader with two textures as input. It needs a value for the InterPupillaryDistance to be set. A lot of code is just setup for the Textures, the FBOs and the ShaderProgram.
 
 
 The fragment shader (distortion.fs) determines whether the pixel is in the left or the right part of the screen and calculates distortion coordinates accordingly (using parameters set in the vtkStereoDistortPass Class. Then it takes the corresponding pixel color from the determined texture in which the two rendered scenes are stored.
 Almost all of the OpenGL and graphical setup code is based on the VTK vtkGaussianBlurPass source code.
-\item[Oculus\_middleware] \hfill \\
+
+%
+
+\FloatBarrier
+
+\subsubsection{Oculus\_Middleware}
 This class is used as a class used to initializate the Oculus and return hardware related information such as the head pose and textures size.
 
-\includegraphics[width=1.0\linewidth]{img/rift_middleware.PNG}
+\begin{figure}[h!]
+	\includegraphics[width=1.0\linewidth]{img/rift_middleware.PNG}
+  	\caption{Informations returned from the oculus\_middleware.}
+\end{figure}
 
-\end{description}
+
 
 
 
