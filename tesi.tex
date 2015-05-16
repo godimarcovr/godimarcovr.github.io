@@ -54,7 +54,7 @@
 %%% END Article customizations
  \usepackage{fixltx2e}
 \usepackage{authblk}
-
+\usepackage[english]{babel}
 
 
 
@@ -70,6 +70,7 @@
 \maketitle
 
 
+
 \tableofcontents
 
 
@@ -79,8 +80,11 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%        Introduction        %%%%%%%%%%%%%%
 \newpage
-\textbf{\textit{Abstract} - This paper is the description of a software project which aims to explore new possibilities offered by the Oculus Rift headmount display. The focus is the study of Volumetric Rendering of 3D datasets (mainly medical results) in a Virtual Reality environment. The possible user base could be the medical field: there are many obvious advantages in a full immersion environment which allows the visualization of medical data in realtime. }
+\begin{abstract}
+\textbf{ This paper is the description of a software project which aims to explore new possibilities offered by the Oculus Rift headmount display. The focus is the study of Volumetric Rendering of 3D datasets (mainly medical results) in a Virtual Reality environment. The possible user base could be the medical field: there are many obvious advantages in a full immersion environment which allows the visualization of medical data in realtime. }
+\end{abstract}
 \section {Introduction}
+
 
 %%%
 \subsection{Volumetric rendering}
@@ -112,7 +116,7 @@ The Oculus Rift  is a virtual reality headset by Oculus VR that offer the user a
 
 \item The graphic card needs to be able to use at least OpenGL 3.1 .
 
-\item Oculus Rift DK1 or DK2
+\item Oculus Rift DK1
 \end{itemize}
 
 
@@ -341,7 +345,7 @@ We looked for other similar projects and two caught our attention: multipass\_vt
 
 The first one sadly only supports Linux and uses an older version of  the Oculus SDK, but uses an interesting approach (the multipass system offered by VTK) which we'll look more into later.
 
-The second one also uses an older version of the Oculus SDK. Also it uses a software distortion of the image, making it too slow for an interactive experience.
+The second one uses a software distortion of the image, making it far too slow for an interactive experience and, like the first one, it also uses an older version of the Oculus SDK
 
 While we were studying these projects, we started developing other components of our software.
 Starting from a VTK example, we created a Volumetric viewer which takes a series of .dcm files (or a .vti or a .mha) and visualizes it on screen, making it possibile to manipulate it by moving the camera and using widgets to make cross sections of it in real time.
@@ -353,13 +357,13 @@ We also looked into pre-existing OpenGL Oculus Rift applications to get an idea 
 
 So we learned of two ways to apply post processing into a VTK application:
 \begin{itemize}
-\item The external way: WindowToImageFilter, which "takes a screenshot" of a viewport and lets you use it as an Actor2D... Two problems: it's very slow (it loads the screenshot from video memory to RAM and the to video memory again) and also doesn't support shaders.
+\item The external way: WindowToImageFilter, which ``takes a screenshot" of a viewport and lets you use it as an Actor2D... Two problems: it's very slow (it loads the screenshot from video memory to RAM and the to video memory again) and also doesn't support shaders.
 \item The internal way: Multipass ( inspired by zadacka's multipass\_vtk ) which lets you build the rendering pipeline of an application, sometimes down to the OpenGL code. Using a Gaussian Blur Post Processing example as a starting point we built a class which solves two of our needed features: "Two points of view" (by making the render pass render the scene two times from different positions) and barrel distortion (by applying a shader to the texture in which we store the rendered scene).
 \end{itemize}
 So we had a volumetric viewer, we could have video from our two eyes, we could distort it and output all of this into our Oculus Rift by mirroring the screen.
 We only needed to handle the user's Head Pose, which we did by polling it trough the Oculus SDK every few milliseconds.
 
-Putting it all together we realized our software.
+%Putting it all together we realized our software.
 
 For an easier use of the software we also created a simple Java application that functions as a launcher for our software, allowing to choose in an interactive way the dataset to be visualised, without forcing the use of a command line.
 
@@ -378,11 +382,17 @@ But the project is far from completed, in fact there are many new features that 
 Now that we worked with both of the two main features of this software (Volume Rendering and Virtual Reality) we can make a few observations.
 
 \begin{itemize}
-\item We noticed that the combination of these two features is very resource-hungry. Volumetric Rendering can make rendering very slow, even with state of the art algorithms. The situation is even worse with virtual reality since you need double the time for every rendering cycle (two slightly different volume renders of the same dataset). This problem can be mitigated in this software by using the command line argument "reductionFactor", which is a value between 0.0 and 1.0 that determines the ratio of the points of the dataset to be shown. This allows for an increase of rendering speed at the cost of quality.
+\item We noticed that the combination of these two features is very resource-hungry. Volumetric Rendering can make rendering very slow, even with state of the art algorithms. The situation is even worse with virtual reality since you need double the time for every rendering cycle  (two slightly different volume renders of the same dataset) and it also has to be rendered with a framerate equal to the device refresh rate or the end result will be sloppy and could cause motion sickness. This problem can be mitigated in this software by using the command line argument "reductionFactor", which is a value between 0.0 and 1.0 that determines the ratio of the points of the dataset to be shown. This allows for an increase of rendering speed at the cost of quality.
 
-\item During testing of the software we noticed that, while we can give the user an immersive experience, the advantage of doing this is not much. While virtual reality is a wonderful tool in fields like gaming and simulators, it is not something that is going to be used in every application.
+\item During testings of the software we noticed that, while we can give the user an immersive experience,
+the advantage of doing this is not much. Virtual reality is a wonderful tool in fields like 
+gaming and simulators on the other hand it is not as usefull in other applications.
 
- For example, immersion is not very useful when viewing medical results! The only "point of interest" in that virtual reality is the medical result, and looking around and seeing only a fixed color background is not very nice. Also Virtual Reality is still growing as a technology, so some quality of the output is lost, expecially if distortion is not done precisely right. Users may prefer better output quality to immersion.
+For example, immersion is not very useful when viewing medical results!
+The only ``point of interest" on the scene is the model of the medical result, so there's nothing else to 
+look at if you move your head, apart from a background color. Furthermore as Virtual Reality is a newly established 
+technology it still has to grow before its output quality can compete against full-hd screens, 
+for this reason some user may prefer a visually enhanced experience instead of an immersive one.
 
 That doesn't mean  that this software is useless. With further development of both our software and the Oculus Rift hardware, output quality will improve. Also with the integration of Gesture Recognition and adding Position Tracking (which needs DK2 support) could make it a completely different experience.
 
@@ -401,13 +411,15 @@ Nonetheless our work was based on pre-existing works and documentations, which a
 \item Oculus Rift Documentation, available on https://developer.oculus.com/documentation/ . We studied these documents to learn how to integrate Oculus Rift in graphical application. Not included are the countless forum posts and blog entries we stumbled upon.
 \item VTK 6.1 Documentation, available on http://www.vtk.org/doc/release/6.1/html/index.html . We used this as reference for which classes to use to reach our goals.
 \item VTK C++ examples, available on http://www.vtk.org/Wiki/VTK/Examples/Cxx . We learned how to use VTK studying these examples.
-\item zadacka's "multipass\_vtk", available on https://github.com/zadacka/multipass\_vtk . We took inspiration to this work for some of the  implementaton of our software.
-\item "Application to allow the use of Oculus Rift with VTK" by Universidade de Aveiro, available on http://sweet.ua.pt/paulo.dias/rva/TrabalhosRVA\_2.htm by contacting professor Paulo Dias. We were also inspired by this work in our development
+\item zadacka's ``multipass\_vtk", available on https://github.com/zadacka/multipass\_vtk . We took inspiration to this work for some of the  implementaton of our software.
+\item ``Application to allow the use of Oculus Rift with VTK" by Universidade de Aveiro, available on http://sweet.ua.pt/paulo.dias/rva/TrabalhosRVA\_2.htm by contacting professor Paulo Dias. We were also inspired by this work in our development
 \end{itemize}
 
 \newpage
 
+
 \section{Thanks}
+\addtocontents{toc}{\protect\enlargethispage{\baselineskip}}
 We wish to express our thanks to Professor Andrea Giachetti for the idea of this project and his help during development.
 We are also grateful to GitHub user zadacka and to Przemysław Brudny and Mateusz Wójcik by the Universidade de Aveiro for providing their examples for applications similar to our own.
 We also thank Alessandro Febretti (main developer of Omegalib) because, even if we ended up discarding his library, was always answering our questions on the omegalib Google Group.
